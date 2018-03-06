@@ -36,5 +36,4 @@ iptables -A OUTPUT -p tcp --dport 31340 -j DROP
 service iptables save
 service iptables restart
 iptables -nv -L
-zabbix-server
 ```
