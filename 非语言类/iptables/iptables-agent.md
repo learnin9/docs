@@ -1,3 +1,7 @@
+#### 适用于Zabbix-Agent
+
+
+```
 #bin/bash
 #20170926
 iptables -F
@@ -33,3 +37,4 @@ service iptables save
 service iptables restart
 iptables -nv -L
 zabbix-server
+```

@@ -1,3 +1,6 @@
+#### 适用于Zabbix-Server
+
+```
 #bin/bash
 #20170926
 iptables -F
@@ -34,3 +37,4 @@ iptables -A OUTPUT -p tcp --dport 31340 -j DROP
 service iptables save
 service iptables restart
 iptables -nv -L
+```
