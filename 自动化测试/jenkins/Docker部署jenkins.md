@@ -4,7 +4,6 @@
 
 ```
 yum -y install docker
-
 ```
 
 * 创建jenkins所需的挂载目录并设置为ID为1000,并向/etc/docker/certs.d中导入harbor的证书
