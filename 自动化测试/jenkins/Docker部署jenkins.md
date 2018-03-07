@@ -2,13 +2,19 @@
 
 1. 安装docker环境
 
+```
+yum -y install docker
+
+```
+
 2. 创建jenkins所需的挂载目录并设置为ID为1000,并向/etc/docker/certs.d中导入harbor的证书
 
 ```
 mkdir -p /jenkins
 chown -R 1000:1000 /jenkins
 ```
-3.根据经验如果不自定义jenkins的时间,jenkins的时间总是和正确时间差了8小时，按照如下方法修改即可
+
+3. 根据经验如果不自定义jenkins的时间,jenkins的时间总是和正确时间差了8小时，按照如下方法修改即可
 
 ```
 vim /etc/timezone
