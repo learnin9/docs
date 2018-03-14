@@ -10,11 +10,8 @@ yum install java-1.8.0* -y
 
 ```
 #!/bin/bash
-#
-# li_zhaojun@topsec.com.cn
 # /etc/rc.d/init.d/tomcat
 # init script for tomcat precesses
-#
 # processname: tomcat
 # description: tomcat is a j2se server
 # chkconfig: 2345 86 16
