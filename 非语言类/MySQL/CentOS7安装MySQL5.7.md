@@ -4,19 +4,19 @@
 * 下载mysql源安装包
 
 ```
-wgethttp://dev.mysql.com/get/mysql57-community-release-el7-8.noarch.rpm
+wget http://dev.mysql.com/get/mysql57-community-release-el7-8.noarch.rpm
 ```
 
 * 安装mysql源
 
 ```
-yumlocalinstallmysql57-community-release-el7-8.noarch.rpm
+yum install mysql57-community-release-el7-8.noarch.rpm
 ```
 
 * 检查mysql源是否安装成功
 
-```angular2html
-yumrepolistenabled|grep"mysql.*-community.*"
+```
+yum repolist enabled | grep "mysql.*-community.*"
 ```
 
  
@@ -29,14 +29,14 @@ yumrepolistenabled|grep"mysql.*-community.*"
 
 
 ```
-yuminstallmysql-community-server
+yum install mysql-community-server
 ```
 
 
 3. 启动MySQL服务
 
 ```
-systemctlstartmysqld
+systemctl start mysqld
 ```
 
 4. 查看MySQL的启动状态
@@ -57,8 +57,8 @@ CGroup:/system.slice/mysqld.service
 4、开机启动
 
 ```
-systemctlenablemysqld
-systemctldaemon-reload
+systemctl enable mysqld
+systemctl daemon-reload
 ```
 
 5. 修改root本地登录密码,mysql安装完成之后，在/var/log/mysqld.log文件中给root生成了一个默认密码。通过执行`grep'temporarypassword'/var/log/mysqld.log`找到root默认密码，然后登录mysql进行修改：
@@ -69,10 +69,9 @@ systemctldaemon-reload
 * 修改密码
 
 ```
-shell>mysql-uroot-p
-mysql>ALTERUSER'root'@'localhost'IDENTIFIEDBY'MyNewPass4!';
+shell>mysql -u root -p
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass4!';
 ```
-
 
 * 在/etc/my.cnf文件添加validate_password_policy配置，指定密码策略
 
@@ -90,7 +89,7 @@ mysql>ALTERUSER'root'@'localhost'IDENTIFIEDBY'MyNewPass4!';
 默认只允许root帐户在本地登录，如果要在其它机器上连接mysql，必须修改root允许远程连接，或者添加一个允许远程连接的帐户，为了安全起见，我添加一个新的帐户：
 
 ```
-mysql>GRANTALLPRIVILEGESON*.*TO'yangxin'@'%'IDENTIFIEDBY'Yangxin0917!'WITHGRANTOPTION;
+mysql>GRANT ALL PRIVILEGES ON *.* TO 'yangxin'@'%' IDENTIFIED BY 'Yangxin0917!' WITH GRANT OPTION;
 ```
 
 7. 配置默认编码为utf8
