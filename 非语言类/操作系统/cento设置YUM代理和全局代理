@@ -1,0 +1,37 @@
+设置全局代理,方法如下:
+ 
+修改 /etc/profile 文件,添加下面内容:
+
+```auto
+http_proxy=http://username:password@yourproxy:8080/
+ftp_proxy=http://username:password@yourproxy:8080/
+export http_proxy
+export ftp_proxy
+```
+
+如果没有密码限制,则以上内容可以修改为以下内容:
+
+```auto
+http_proxy=http://yourproxy:8080/
+ftp_proxy=http://yourproxy:8080/
+export http_proxy
+export ftp_proxy
+```
+
+若只针对某个用户而言,则修改 ~/.bash_profile 文件,添加相同内容;
+修改完成后,注销重新登录即可。
+ 
+对于yum代理 ,还要另外设置 /etc/yum.conf 文件,添加以下代码:
+ 
+```auto
+proxy=http://username:password@yourproxy:8080/
+```
+
+若无密码限制,则为以下方式
+
+```auto
+#proxy=http://yourproxy:8080/
+```
+
+这样yum的操作就通过代理了
+ 
