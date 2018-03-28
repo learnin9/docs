@@ -36,6 +36,12 @@ lvextend -l +100%FREE /dev/centos/root
 xfs_growfs /dev/centos/root
 ```
 
+**CentOS6**:
+
+```
+resize2fs -p /dev/VolGroup/lv_root
+```
+
 7. 查看centos的大小是否已经扩容
 
 ```
