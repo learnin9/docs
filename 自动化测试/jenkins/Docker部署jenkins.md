@@ -23,7 +23,7 @@ vim /etc/timezone
 * 拉取镜像开始启动：
 
 ```
-docker run -itd -p 8080:8080 -p 50000:50000 --name jenkins --privileged=true -v /jenkins:/var/jenkins_home -v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone -d harbor.cloud.top/jenkins/jenkins:2.89.2TLS 
+docker run -itd -p 8080:8080 -p 50000:50000 --name jenkins --privileged=true -v /jenkins:/var/jenkins_home -v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone -d harbor.cloud.top/jenkins/jenkins:latest 
 ```
 
 * 查看密码

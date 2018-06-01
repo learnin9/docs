@@ -25,7 +25,16 @@ restrict ntp.cloud.top nomodify notrap noquery
 includefile /etc/ntp/crypto/pw
 keys /etc/ntp/keys
 disable monitor
-
+```
+```
+server 192.168.59.241 iburst
+driftfile /var/lib/ntp/drift
+restrict default nomodify notrap nopeer noquery
+restrict 127.0.0.1
+restrict ::1
+includefile /etc/ntp/crypto/pw
+keys /etc/ntp/keys
+disable monitor
 ```
 
 

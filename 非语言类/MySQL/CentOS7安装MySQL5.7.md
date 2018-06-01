@@ -61,7 +61,7 @@ systemctl enable mysqld
 systemctl daemon-reload
 ```
 
-5. 修改root本地登录密码,mysql安装完成之后，在/var/log/mysqld.log文件中给root生成了一个默认密码。通过执行`grep'temporarypassword'/var/log/mysqld.log`找到root默认密码，然后登录mysql进行修改：
+5. 修改root本地登录密码,mysql安装完成之后，在/var/log/mysqld.log文件中给root生成了一个默认密码。通过执行`grep 'temporary password' /var/log/mysqld.log`找到root默认密码，然后登录mysql进行修改：
 
 
 
