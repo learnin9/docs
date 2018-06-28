@@ -22,3 +22,5 @@ Acquire::http::Proxy "http://192.168.59.241:8888";
 deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib
 ```
 
+* 自动更新命令: `apt-get update && apt-get upgrade && apt-get dist-upgrade`
+
