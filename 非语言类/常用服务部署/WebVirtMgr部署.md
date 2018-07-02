@@ -233,7 +233,7 @@ nohup ./data/www/webvirtmgr/manage.py runserver 0.0.0.0:8000 &
 1. Create SSH private key and ssh config options \(On system where WebVirtMgr is installed\):
 
 ```auto
-# cd /var/cahce/nginx
+# cd /var/lib/nginx
 # mkdir .ssh 
 # chown -Rf nginx:nginx .ssh 
 # chmod -Rf 700 .ssh
