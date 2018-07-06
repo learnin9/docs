@@ -70,6 +70,7 @@ swap    16G
 # openssl rsa -in nginx.key.org -out nginx.key
 标记证书使用上述私钥和CSR
 # openssl x509 -req -days 365 -in nginx.csr -signkey nginx.key -out nginx.crt
+# openssl dhparam -out dhparams.pem 2048
 备份默认配置文件
 # cd /etc/nginx/conf.d/ && mv default.conf default.conf.back
 编辑新的zabbix.conf
@@ -104,11 +105,14 @@ server {
          listen 443;
          server_name localhost;
          ssl on;
-         ssl_certificate /etc/nginx/cert/nginx.crt;
-         ssl_certificate_key /etc/nginx/cert/nginx.key;
-         ssl_protocols SSLv3 SSLv2 TLSv1 TLSv1.1 TLSv1.2;
-         ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
+         ssl_certificate       /etc/nginx/cert/nginx.crt;
+         ssl_certificate_key   /etc/nginx/cert/nginx.key;
+         ssl_dhparam           /etc/nginx/cert/dhparams.pem;
+         ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+         ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA';
          ssl_prefer_server_ciphers on;
+         ssl_session_cache shared:SSL:20m;
+         ssl_session_timeout 180m;
 
          location / {
             root /data/html/zabbix/;
