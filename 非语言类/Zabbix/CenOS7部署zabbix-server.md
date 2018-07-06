@@ -15,7 +15,7 @@
 
 **安装过程**
 
-* 安装CentOS7.3，分区如下
+* 安装CentOS7.5，分区如下
 
 ```auto
 /boot   500M
@@ -82,22 +82,7 @@ server {
 
         listen       80;
         server_name  localhost;
-        rewrite ^(.*) https://192.168.1.1$1 permanent;     
-        #为了安全起见，配置了80重定向到443,IP地址自己根据环境定义
-
-        location / {
-            root   /data/html/zabbix/;
-            index  index.html index.htm index.php;
-          }
-
-       location ~ \.php$ {
-         root           /data/html/zabbix/;
-         fastcgi_pass   127.0.0.1:9000;
-         fastcgi_index  index.php;
-         fastcgi_param  SCRIPT_FILENAME  /data/html/zabbix/$fastcgi_script_name;
-         include        fastcgi_params;
-          }
-
+        return 301 https://$host$request_uri;
 }
 #https
 server {
@@ -154,7 +139,7 @@ mysql> flush privileges;    //刷新权限表
 mysql> exit
 # cd /usr/share/doc/zabbix-server-mysql-3.4.1
 # gunzip create.sql.gz 
-# mysql -uadmin -pTalent123 zabbix < create.sql
+# mysql -uzabbix -pTalent123 zabbix < create.sql
 # systemctl restart mariadb.service
 ```
 
