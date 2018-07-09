@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #/bin/bash
 source /root/.bash_profile
 

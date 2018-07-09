@@ -1,0 +1,33 @@
+#!/bin/bash
+#Author:gudaoyufu.com
+#Date:2018-07-03
+vip='192.168.214.140'
+iface='lo:1'
+#mask='255.255.255.255'
+port='80'
+rs1='192.168.214.143'
+rs2='192.168.214.145'
+scheduler='wrr'
+type='-g'
+rpm -q ipvsadm &> /dev/null || yum -y install ipvsadm &> /dev/null
+
+case $1 in
+start)
+    ip addr add $vip dev $iface
+    iptables -F
+
+    ipvsadm -A -t ${vip}:${port} -s $scheduler
+    ipvsadm -a -t ${vip}:${port} -r ${rs1} $type -w 1
+    ipvsadm -a -t ${vip}:${port} -r ${rs2} $type -w 1
+    echo "The LVS Director Server is Ready!"
+    ;;
+stop)
+    ipvsadm -C
+    ip addr del $vip dev $iface &> /dev/null
+    echo "The LVS Director Server is Canceled!"
+    ;;
+*)
+    echo "Usage: $(basename $0) start|stop"
+    exit 1
+    ;;
+esac
