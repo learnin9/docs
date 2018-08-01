@@ -124,7 +124,33 @@ server {
 
 * 配置数据库
 
-```auto
+ * 编辑`my.cnf`文件，增加以下内容:
+
+```
+[root@Node3 ~]# vim /etc/my.cnf    //编辑my.cnf文件
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+innodb_file_per_table = on  //每个表使用一张单独的表
+skip_name_resolve =  on　　//跳过名称反解
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+# Settings user and group are ignored when systemd is used.
+# If you need to run mysqld under a different user or group,
+# customize your systemd unit file for mariadb according to the
+# instructions in http://fedoraproject.org/wiki/Systemd
+[mysqld_safe]
+log-error=/var/log/mariadb/mariadb.log
+pid-file=/var/run/mariadb/mariadb.pid
+#
+# include all files from the config directory
+#
+!includedir /etc/my.cnf.d
+```
+
+* 启动数据库，并设置开机自启动
+
+```
 启动数据库
 # systemctl start mariadb.service && systemctl enable mariadb.service
 设置数据库root管理员的密码
@@ -138,7 +164,7 @@ mysql> grant all privileges on zabbix.* to zabbix@localhost identified by 'Talen
 mysql> flush privileges;    //刷新权限表
 mysql> exit
 # cd /usr/share/doc/zabbix-server-mysql-3.4.1
-# gunzip create.sql.gz 
+# gunzip create.sql.gz
 # mysql -uzabbix -pTalent123 zabbix < create.sql
 # systemctl restart mariadb.service
 ```
@@ -176,7 +202,7 @@ memory_limit = 128M
 # systemctl enable nginx.service && systemctl start nginx.service
 ```
 
-* 配置zabbix\_server
+* 配置zabbix_server
 
 ```auto
 # vim /etc/zabbix/zabbix_server.conf
@@ -219,4 +245,3 @@ Hostname=ad1.cloud.top
 Defaults:zabbix    !requiretty
 zabbix  ALL=NOPASSWD:ALL
 ```
-
