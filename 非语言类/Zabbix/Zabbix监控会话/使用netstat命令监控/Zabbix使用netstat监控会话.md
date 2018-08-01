@@ -195,4 +195,4 @@ UserParameter=tcp.status[*],/etc/zabbix/zabbix_agentd.d/tcp_status.sh "$1"   //�
 ```
 
 
-**后记**：发现通过netstat监控服务器的tcp等连接数效率比较低，netstat统计占用大量cpu带来服务器额外的压力，通过ss命令会更加合适，详情请看：[这篇文章]()
+**后记**：发现通过netstat监控服务器的tcp等连接数效率比较低，netstat统计占用大量cpu带来服务器额外的压力，通过ss命令会更加合适，详情请看：[这篇文章](/非语言类/Zabbix/Zabbix监控会话/使用ss命令监控/使用ss命令对tcp连接数和状态的监控性能优化.md)
