@@ -1,0 +1,10 @@
+﻿如果是https类型的网站，应该在curl后面加上-k  去掉双引号！
+
+
+location /ngx_status {
+             stub_status on;
+             access_log   off;
+             allow 127.0.0.1;
+             allow 172.19.30.40;
+             deny all;
+         }
