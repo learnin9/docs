@@ -17,7 +17,7 @@
 
 * 安装CentOS7.5，分区如下
 
-```auto
+```
 /boot   500M
 swap    16G
 /       50G
@@ -26,7 +26,7 @@ swap    16G
 
 * 关闭Firewalld和SElinux
 
-```auto
+```
 # systemctl disable firewalld.service && systemctl stop firewalld.service
 # sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 # setenforce 0
@@ -34,7 +34,7 @@ swap    16G
 
 * 安装zabbix server YUM源
 
-```auto
+```
 # yum -y install vim wget lsof net-tools -y
 # wget http://repo.zabbix.com/zabbix/3.4/rhel/7/x86_64/zabbix-release-3.4-2.el7.noarch.rpm
 # rpm -ivh zabbix-release-3.4-2.el7.noarch.rpm
@@ -43,14 +43,14 @@ swap    16G
 
 * 安装Nginx+PHP+MariaDB
 
-```auto
+```
 # rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
 # yum install php php-fpm mariadb mariadb-server nginx -y
 ```
 
 * 复制www目录
 
-```auto
+```
 # mkdir -p /data/html/zabbix
 # cd /usr/share/zabbix/ && cp -r * /data/html/zabbix/
 # chown -Rf apache:apache /data/html/zabbix/* && chmod -Rf 755 /data/html/zabbix/*
@@ -58,7 +58,7 @@ swap    16G
 
 * 配置Nginx+HTTPS
 
-```auto
+```
 生成自签名证书，先创建一个存放证书的目录
 # mkdir -p /etc/nginx/cert && cd /etc/nginx/cert
 创建服务器私钥，会提示输入一个口令
@@ -173,7 +173,7 @@ mysql> exit
 
 上面导入初始数据库的方法可能存在问题，我是选取了最笨的办法，先下载了`zabbix-3.4.1.tar.gz`
 
-```auto
+```
 # wget https://sourceforge.net/projects/zabbix/files/latest/zabbix-3.4.1.tar.gz
 # tar -zxvf zabbix-3.4.1.tar.gz
 # cd zabbix-3.4.1
@@ -186,7 +186,7 @@ mysql> exit
 
 * 配置PHP，修改php.ini
 
-```auto
+```
 # vim /etc/php.ini
 ···
 date.timezone = Asia/Shanghai
@@ -204,7 +204,7 @@ memory_limit = 128M
 
 * 配置zabbix_server
 
-```auto
+```
 # vim /etc/zabbix/zabbix_server.conf
 DBHost=localhost
 DBName=zabbix
@@ -216,7 +216,7 @@ DBPassword=Talent123
 
 * 安装zabbix-agent
 
-```auto
+```
 RHEL6系列按照如下命令安装
 # wget http://repo.zabbix.com/zabbix/3.4/rhel/6/x86_64/zabbix-agent-3.4.1-1.el6.x86_64.rpm
 # yum install zabbix-agent-3.4.1-1.el6.x86_64.rpm -y
@@ -236,7 +236,7 @@ Hostname=ad1.cloud.top
 
 * 启动zabbix-agent客户端服务
 
-```auto
+```
 # service zabbix-agent start && chkconfig zabbix-agent on
 ```
 `vim /etc/sudoers`
