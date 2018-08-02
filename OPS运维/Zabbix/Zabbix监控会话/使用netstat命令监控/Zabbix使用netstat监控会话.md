@@ -1,6 +1,5 @@
 # Zabbix使用netstat监控会话
 
-* [原文链接](https://www.cnblogs.com/cloudos/p/8308946.html)
 
 > TCP的连接状态对于我们web服务器来说是至关重要的，尤其是并发量ESTAB；或者是syn_recv值，假如这个值比较大的话我们可以认为是不是受到了攻击，或是是time_wait值比较高的话，我们要考虑看我们内核是否需要调优，太高的time_wait值的话会占用太多端口，要是端口少的话后果不堪设想
 
