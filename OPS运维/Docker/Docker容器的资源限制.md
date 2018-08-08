@@ -16,6 +16,7 @@ Docker内存控制`OOME`在linxu系统上，如果内核探测到当前宿主机
 | O     | 正数M  | 相当于未设置swap (unset) |
 | unset | 正数M  | 若主机(Docker Host)启用了swap,则容器的可用swap为2*M |
 | -l    | 正数M  | 若主机(Docker Host)启用了swap,则容器的可使用最大值主机上的所有swap空间的swap资源 |
+
  **注意**：在容器内使用free命令可以看到的swap空间并不具有其所展现出的空间指示意义
 
 * `--oom-kill-disable=true` : 禁止容器被`oom`杀掉，使用该参数要与`-m`一起使用
