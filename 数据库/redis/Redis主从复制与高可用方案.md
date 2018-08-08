@@ -225,3 +225,235 @@ sentinel集群使用ping命令来检测实例的状态，如果在指定的时�
 此时当sentinel集群中有一半以上的节点通告master为宕机状态时，此时为客观宕机，sentinel基于选举协议选举提升从节点为新的master，从节点之间根据优先级来决策谁会成为新的master，修复的节点重新上线后作为从节点工作。
 
 #### 配置sentinel 集群
+
+下面使用上面的结构图，配置sentinel集群，来监控上面已经配置好的复制集群，实现高可用复制集群。
+由于没有那么多机器，这里只使用6台主机做两个master-slave复制集群，把sentinel集群同时放在其中一组集群上与redis复制集群共存。sentinel集群同时监控两个复制集群。
+
+安装redis安装时自带了sentinel功能，因此只要安装了redis即可，在创建一个复制集群，并在第二个复制集群上创建sentinel集群共存。
+
+#### 安装redis
+
+```
+[root@redis-master ~]# yum install redis -y
+[root@redis-salve-1 ~]# yum install redis -y
+[root@redis-salve-2 ~]# yum install redis -y
+```
+
+配置主从复制
+
+```
+bind 0.0.0.0     
+requirepass gudaoyufu.com
+```
+
+启动主节点redis：`service redis start`
+
+启动两个从节点使用指令配置从节点为slave
+
+```
+[root@redis-salve-1 ~]# systemctl start redis
+[root@redis-slave-2 ~]# systemctl start redis
+```
+
+salve节点配置：
+
+```
+[root@redis-salve-1 ~]# redis-cli
+127.0.0.1:6379> slaveof 192.168.214.141 6379
+OK
+127.0.0.1:6379> config set masterauth gudaoyufu.com
+OK
+
+#
+
+[root@redis-slave-2 ~]# redis-cli
+127.0.0.1:6379> slaveof 192.168.214.141 6379
+OK
+127.0.0.1:6379> config set masterauth gudaoyufu.com
+OK
+```
+
+主节点查看
+
+```
+[root@redis-master ~]# redis-cli -h 127.0.0.1 -a gudaoyufu.com
+127.0.0.1:6379> info replication
+# Replication
+role:master
+connected_slaves:2
+slave0:ip=192.168.214.143,port=6379,state=online,offset=827,lag=1
+slave1:ip=192.168.214.147,port=6379,state=online,offset=827,lag=1
+master_repl_offset:841
+repl_backlog_active:1
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:2
+repl_backlog_histlen:840
+```
+
+**调整两个复制集群slave的优先级**
+两个集群中选一个slave节点调低优先级
+
+```
+slave-priority 90
+#重启
+systemctl restart redis
+```
+
+
+配置sentinel监控集群
+
+```
+[root@redis-master ~]# vim /etc/redis-sentinel.conf
+
+bind 0.0.0.0
+port 26379
+
+sentinel monitor mymaster-1 192.168.214.141 6379 2
+sentinel monitor mymaster-2 192.168.214.148 6379 2
+
+sentinel auth-pass  mymaster-1 gudaoyufu.com
+sentinel auth-pass  mymaster-2 gudaoyufu
+
+sentinel down-after-milliseconds mymaster-1 30000
+sentinel down-after-milliseconds mymaster-2 30000
+
+sentinel parallel-syncs mymaster-1 1
+sentinel parallel-syncs mymaster-2 1
+
+sentinel failover-timeout mymaster-1 180000
+sentinel failover-timeout mymaster-2 180000
+
+logfile /var/log/redis/sentinel.log
+```
+
+**将上面的配置文件配置好后各自复制一份到其他两个节点，注意：复制配置文件一定要在启动redis-sentinel服务之前，因为启动服务后配置文件中会生成id号，服务个节点的id相同会造成无法选举新的master节点**
+
+配置文件复制后启动各节点redis-sentinel服务。
+
+```
+service  redis-sentinel start
+systemctl  start redis-sentinel
+（我使用的系统版本不一样，所以指令不同）
+```
+在redis-sentinel.conf文件中分别定义两个复制集群的master信息。
+
+**参数作用**
+
+* sentinel monitor < master-name > < ip > < redis-port > < quorum >
+* sentinel auth-pass < master-name > < password >
+ * < quorum >表示sentinel集群的quorum机制，即至少有quorum个sentinel节点同时判定主节点故障时，才认为其真的故障；
+* sentinel down-after-milliseconds < master-name > < milliseconds > ：监控到指定的集群的主节点异常状态持续多久方才将标记为“故障”；
+* sentinel parallel-syncs < master-name > < numslaves > ： 指在failover过程中，能够被sentinel并行配置的从节点的数量；
+* sentinel failover-timeout < master-name > < milliseconds > ：sentinel必须在此指定的时长内完成故障转移操作，否则，将视为故障转移操作失败；
+* sentinel notification-script < master-name > < script-path > ：通知脚本，此脚本被自动传递多个参数；
+
+#### 测试故障转移
+
+停掉mymaster-2的主节点 （192.168.214.148 ），查看mymaster-2的主节点有没有发生改变：
+
+```
+[root@redis-master ~]# redis-cli -p 26379
+127.0.0.1:26379> SENTINEL masters
+1)  1) "name"
+    2) "mymaster-1"
+    3) "ip"
+    4) "192.168.214.141"
+    5) "port"
+    6) "6379"
+    7) "runid"
+    8) "c068ea99d1f60e1eb5822d6eecbde47a45661509"
+    9) "flags"
+   10) "master"
+   11) "link-pending-commands"
+   12) "0"
+   13) "link-refcount"
+   14) "1"
+   15) "last-ping-sent"
+   16) "0"
+   17) "last-ok-ping-reply"
+   18) "151"
+   19) "last-ping-reply"
+   20) "151"
+   21) "down-after-milliseconds"
+   22) "30000"
+   23) "info-refresh"
+   24) "770"
+   25) "role-reported"
+   26) "master"
+   27) "role-reported-time"
+   28) "793908"
+   29) "config-epoch"
+   30) "0"
+   31) "num-slaves"
+   32) "2"
+   33) "num-other-sentinels"
+   34) "2"
+   35) "quorum"
+   36) "2"
+   37) "failover-timeout"
+   38) "180000"
+   39) "parallel-syncs"
+   40) "1"
+2)  1) "name"
+    2) "mymaster-2"
+    3) "ip"
+    4) "192.168.214.149"
+    5) "port"
+    6) "6379"
+    7) "runid"
+    8) "60ba5b8b5cc52fbb691179ec43b8582a161ed7e8"
+    9) "flags"
+   10) "master"
+   11) "link-pending-commands"
+   12) "0"
+   13) "link-refcount"
+   14) "1"
+   15) "last-ping-sent"
+   16) "0"
+   17) "last-ok-ping-reply"
+   18) "7"
+   19) "last-ping-reply"
+   20) "7"
+   21) "down-after-milliseconds"
+   22) "30000"
+   23) "info-refresh"
+   24) "5101"
+   25) "role-reported"
+   26) "master"
+   27) "role-reported-time"
+   28) "35884"
+   29) "config-epoch"
+   30) "1"
+   31) "num-slaves"
+   32) "2"
+   33) "num-other-sentinels"
+   34) "2"
+   35) "quorum"
+   36) "2"
+   37) "failover-timeout"
+   38) "180000"
+   39) "parallel-syncs"
+   40) "1"
+```
+
+从上的一堆信息中可以看到已经改变了
+
+```
+2) "mymaster-2"
+3) "ip"
+4) "192.168.214.149"   #新的master
+#注意：slave节点的值越小，优先级越高
+```
+
+至此，两个redis的高可用复制集群已经完成了，还有一些参数根据环境调整即可
+
+**SENTINEL常用指令**
+
+```
+redis-cli -h SENTINEL_HOST -p SENTINEL_PORT
+redis-cli>
+SENTINEL masters
+SENTINEL slaves < MASTER_NAME >
+SENTINEL failover < MASTER_NAME >
+SENTINEL get-master-addr-by-name < MASTER_NAME >
+```
