@@ -10,12 +10,12 @@
 ```
 proxy_set_header Host $host;   
 ```
-#当后端服务器配置多个web站点时，该选项可以让服务器识别出具体要访问的是哪个站点，而不会将第一个站点作为默认站点传递给用户
+当后端服务器配置多个web站点时，该选项可以让服务器识别出具体要访问的是哪个站点，而不会将第一个站点作为默认站点传递给用户
 
 ```
 proxy_set_header X-Forwarded-For $remote_addr;   
 ```
-#如果后端服务器需要获取用户的真实IP，需要该选项
+如果后端服务器需要获取用户的真实IP，需要该选项
 
 * client_body_buffer_size：客户端请求主体缓冲区大小
 * proxy_connect_timeout：代理服务器和后端真实服务器握手连接超时时间
