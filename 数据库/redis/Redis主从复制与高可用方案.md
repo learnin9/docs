@@ -52,9 +52,9 @@ save 60 10000  ： 60秒内有10000个键发生更改就触发快照
 * appendonly no ：默认禁用
 * appendfilename “appendonly.aof” ：
 * appendfsync ：将aof文件的缓冲区数据同步到磁盘，防止故障导致数据丢失，同步频繁会导致I/O负载过大，可以同步方式如下：
- * no：redis：不执行主动同步操作，而是OS进行；
- * everysec：每秒一次；
- * always：每语句一次；
+  * no：redis：不执行主动同步操作，而是OS进行；
+  * everysec：每秒一次；
+  * always：每语句一次；
 * no-appendfsync-on-rewrite no ：是否在后台执行aof重写期间不调用fsync，默认为no，表示调用；
 * auto-aof-rewrite-percentage 100 ：对aof文件变化量的控制
 * auto-aof-rewrite-min-size 64mb ：对aof规定大小最小达到64MB才重写
