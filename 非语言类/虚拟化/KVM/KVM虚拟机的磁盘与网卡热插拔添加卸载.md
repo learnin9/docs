@@ -68,6 +68,7 @@ tmpfs                    129M     0  129M   0% /run/user/0
 100+0 records in
 100+0 records out
 104857600 bytes (105 MB) copied, 0.90489 s, 116 MB/s
+
 [root@localhost ~]# du -sh /mnt/
 101M    /mnt/
 ```
