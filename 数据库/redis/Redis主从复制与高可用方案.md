@@ -341,7 +341,7 @@ systemctl  start redis-sentinel
 
 * sentinel monitor < master-name > < ip > < redis-port > < quorum >
 * sentinel auth-pass < master-name > < password >
-  * < quorum >表示sentinel集群的quorum机制，即至少有quorum个sentinel节点同时判定主节点故障时，才认为其真的故障；
+   * < quorum >表示sentinel集群的quorum机制，即至少有quorum个sentinel节点同时判定主节点故障时，才认为其真的故障；
 * sentinel down-after-milliseconds < master-name > < milliseconds > ：监控到指定的集群的主节点异常状态持续多久方才将标记为“故障”；
 * sentinel parallel-syncs < master-name > < numslaves > ： 指在failover过程中，能够被sentinel并行配置的从节点的数量；
 * sentinel failover-timeout < master-name > < milliseconds > ：sentinel必须在此指定的时长内完成故障转移操作，否则，将视为故障转移操作失败；
