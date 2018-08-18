@@ -15,8 +15,11 @@
 ### 教育站
 
 上海交通大学：http://ftp.sjtu.edu.cn/html/resources.xml
+
 华中科技大学：http://mirror.hust.edu.cn
+
 清华大学：http://mirrors.tuna.tsinghua.edu.cn
+
 北京理工大学：http://mirror.bit.edu.cn/web
 兰州大学：http://mirror.lzu.edu.cn
 中国科技大学：http://mirrors.ustc.edu.cn
