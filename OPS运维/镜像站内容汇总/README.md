@@ -1,5 +1,7 @@
 # 镜像站地址汇总
 
+原文地址: https://www.cnblogs.com/clsn/p/8372108.html
+
 ## 站点版
 
 ### 企业站
