@@ -11,6 +11,10 @@ PORT="443"
 function ping {
     /sbin/pidof nginx | wc -l
 }
+#检测nginx并发数量 
+function ESTAB {
+    /usr/bin/netstat -vnlpta | grep nginx | grep ESTABLISHED | wc -l
+}
 # 检测nginx性能
 function active {
     /usr/bin/curl https://$HOST:$PORT/ngx_status/ -k 2>/dev/null| grep 'Active' | awk '{print $NF}'
