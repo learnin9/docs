@@ -392,4 +392,4 @@ Using config: /data/zookeeper1/bin/../conf/zoo.cfg
 Mode: follower
 ```
 
-关于zookeeper的单机模式和伪集群就写到这，分布式集群部署[店家阅读](zookeeper分布式集群部署.md)
+关于zookeeper的单机模式和伪集群就写到这，分布式集群部署[点击阅读](zookeeper分布式集群部署.md)
