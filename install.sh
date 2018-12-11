@@ -96,7 +96,6 @@ user=nginx
 
 _EEOF
 
-
 echo "正在给NGINX添加SSH私钥,请脚本如有停止请回车"
 echo "正在给NGINX添加SSH私钥,请脚本如有停止请回车"
 echo "正在给NGINX添加SSH私钥,请脚本如有停止请回车"
