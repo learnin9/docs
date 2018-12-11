@@ -73,9 +73,9 @@ _BEOF
 
 chown -R nginx:nginx /app/webvirtmgr
 
-touch /etc/supervisord.d/webvirtmgr.init
+touch /etc/supervisord.d/webvirtmgr.ini
 
-cat  /etc/supervisord.d/webvirtmgr.init  << _EEOF
+cat  /etc/supervisord.d/webvirtmgr.ini  << _EEOF
 [program:webvirtmgr]
 command=/usr/bin/python /app/webvirtmgr/manage.py run_gunicorn -c /app/webvirtmgr/conf/gunicorn.conf.py
 directory=/app/webvirtmgr
