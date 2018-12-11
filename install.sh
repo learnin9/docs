@@ -24,7 +24,9 @@ echo "#     Password: xxxxxx (Put: your password)"
 echo "#     Password (again): xxxxxx (Put: confirm password)"
 echo "#     Superuser created successfully."
 echo "##########################################################################################################"
+echo "                                             "
 echo "正在设置数据库,请按照上述例子输入相关信息...."
+echo "                                             "
 python manage.py syncdb
 # Add Database administrator for webvirtmagr, no System administrator!
 echo "###################################################"
