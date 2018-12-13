@@ -3,10 +3,13 @@
 # lizhaojun
 # lizhaojun.ops@gmail.com
 #------------------------------
+
+######################
+##   基础组件安装  ###
+######################
 echo "----------------------------------------------"
 echo "  开始初始化服务器,这需要一些时间,请耐心等待"  
 echo "----------------------------------------------"
-
 echo "正在关闭防火墙,SELinux"
 sudo service firewalld stop && sudo chkconfig firewalld off
 sudo service iptables stop && sudo chkconfig iptables off
@@ -41,13 +44,64 @@ echo "正在启动chronyd时间同步(等同于NTP,CentOS7版本已全线变更)
 echo "-------------------------------------------------------------"
 sudo service chronyd restart && sudo chkconfig chronyd on
 
-
 sudo echo  > /etc/security/limits.conf
+
 sudo cat > /etc/security/limits.conf  << _BEOF
 root soft nofile 65535
 root hard nofile 65535
 _BEOF
 
+####################
+## 添加非root用户 ##
+####################
+
+## useradd weblogic (服务用户)
+
+grep -w 'weblogic' /etc/passwd
+if [ $? -eq 0 ];then
+  echo 'user weblogic already exists!'
+else
+  useradd -u 999 weblogic
+  passwd weblogic
+  echo 'user weblogic create successfully!'
+fi
+#echo 'weblogic            ALL=(ALL)       NOPASSWD: ALL' >>/etc/sudoers
+
+## useradd ops_admin
+grep -w 'ops_admin' /etc/passwd
+if [ $? -eq 0 ];then
+  echo 'user ops_admin already exists!'
+  echo 'frAETB5A734gqtb'|passwd --stdin ops_admin
+else
+  useradd -u 888 ops_admin
+  echo 'frAETB5A734gqtb'|passwd --stdin ops_admin
+  echo 'user ops_admin create successfully!'
+fi
+echo 'ops_admin            ALL=(ALL)       NOPASSWD: ALL' >>/etc/sudoers
+##useradd dev_guest
+grep -w 'dev_guest' /etc/passwd
+if [ $? -eq 0 ];then
+  echo 'user dev_guest already exists!'
+  echo 'eEZjcrl28jjei-ql' |passwd --stdin dev_guest
+else
+  useradd -u 777 dev_guest
+  echo 'eEZjcrl28jjei-ql' |passwd --stdin dev_guest
+  echo 'user dev_guest create successfully!'
+fi
+## useradd work 
+grep -w 'work' /etc/passwd
+if [ $? -eq 0 ];then
+  echo 'user work already exists!'
+  echo 'wjaPzu6aNen{zhl9' |passwd --stdin work
+else
+  useradd -u 666 work
+  echo 'wjaPzu6aNen{zhl9' |passwd --stdin work
+  echo 'user work create successfully!'
+fi
+
+################
+##  内核优化  ##
+################
 
 echo "-------------------------"
 echo "   正在进行内核优化   "
@@ -120,5 +174,68 @@ vm.max_map_count=655360
 _FEOF
 
 sudo sysctl -p
+
+##############
+## 计划任务 ##
+##############
+
+sudo echo "0 */6 * * * sync && echo 3 >/proc/sys/vm/drop_caches  && echo 0 >/proc/sys/vm/drop_caches && swapoff -a && swapon -a" >> /var/spool/cron/root
+sudo service crond restart && sudo chkconfig crond on
+
+
+##############
+## 安装JAVA ##
+##############
+
+sudo mkdir -p /opt/java
+sudo wget -P /opt/java/ https://download.oracle.com/otn-pub/java/jdk/8u191-b12/2787e4a523244c269598db4e85c51e0c/jdk-8u191-linux-x64.tar.gz
+sudo tar -zxvf jdk-8u191-linux-x64.tar.gz -C /opt/java/
+sudo touch /etc/profile.d/java.sh
+sudo echo  > /etc/profile.d/java.sh
+
+sudo cat > /etc/profile.d/java.sh  << _FEOF
+export JAVA_HOME=/opt/java/java-1.8.0_191
+export JRE_HOME=$JAVA_HOME/jre
+export CLASSPATH=$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
+export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+
+_FEOF
+
+sudo source /etc/profile
+
+###############
+## 安装MAVEN ##
+###############
+
+sudo mkdir -p /opt/maven
+sudo wget -P /opt/maven/ https://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz
+sudo tar -zxvf /opt/maven/apache-maven-3.6.0-bin.tar.gz -C /opt/maven/
+sudo mv /opt/maven/apache-maven-3.6.0 /opt/maven/maven-3.6.0
+
+sudo touch /etc/profile.d/maven.sh
+sudo echo  > /etc/profile.d/maven.sh
+
+sudo cat > /etc/profile.d/maven.sh  << _EEOF
+export MAVEN_HOME=/opt/maven/maven-3.6.0
+export PATH=$MAVEN_HOME/bin:$PATH
+
+_EEOF
+
+sudo source /etc/profile
+
+#######################
+##  iptables 防火墙  ##
+#######################
+
+echo "==================================================="
+echo " 你正在安装旧版防火墙iptables,这将替换firewall !!! "
+echo " 按照提示输入'yes'或者'y'继续; 输入'No'或者'n'取消 "
+echo "==================================================="
+sudo yum install iptables* 
+sudo chkconfig iptables on && sudo chkconfig firewalld off 
+
+echo "#############################"
+echo "##  iptalbes install ok !  ##" 
+echo "#############################" 
 
 
