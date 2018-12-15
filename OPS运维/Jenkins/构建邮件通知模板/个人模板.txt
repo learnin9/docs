@@ -1,0 +1,19 @@
+本邮件是程序自动下发的，请勿回复！
+
+项目名称：$PROJECT_NAME
+
+构建状态：$BUILD_STATUS
+
+构建编号：$BUILD_NUMBER
+
+触发原因：${CAUSE}
+
+版本分支/tag号：$BRANCH
+
+仓库地址: ${GIT_URL}
+
+构建日志地址：${BUILD_URL}console
+
+构建地址：$BUILD_URL
+
+历史变更记录 : ${PROJECT_URL}changes
