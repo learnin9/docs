@@ -1,12 +1,5 @@
 # /bin/bash!
-# ------------------------------
-# lizhaojun
-# lizhaojun.ops@gmail.com
-#------------------------------
 
-######################
-##   基础组件安装  ###
-######################
 echo "----------------------------------------------"
 echo "  开始初始化服务器,这需要一些时间,请耐心等待"  
 echo "----------------------------------------------"
@@ -19,14 +12,15 @@ sudo sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 echo "----------------------------------------------"
 echo "更新一些必要的组件信息,如:SSH,TELNET,LRZSZ等"
 echo "----------------------------------------------"
-sudo yum install epel-release -y && sudo yum -y install net-tools ssh telnet mailx htop iotop iftop nload lsof ntp*
+sudo yum install epel-release -y
+sudo yum install net-tools openssh telnet mailx htop iotop iftop nload lsof -y
 echo "----------------------------------------------"
 echo      "正在安装开发者工具,请稍等一会儿....."
 echo "----------------------------------------------"
-sudo yum -y groupinstall "Development Tools"
+sudo yum groupinstall "Development Tools" -y
 
 sudo echo  > /etc/chrony.conf
-sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+sudo cp -rf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 sudo cat > /etc/chrony.conf  << _EEOF
 server 0.centos.pool.ntp.org iburst
 server 1.centos.pool.ntp.org iburst
@@ -65,7 +59,7 @@ else
   passwd weblogic
   echo 'user weblogic create successfully!'
 fi
-#echo 'weblogic            ALL=(ALL)       NOPASSWD: ALL' >>/etc/sudoers
+echo 'weblogic            ALL=(ALL)       NOPASSWD: ALL' >>/etc/sudoers
 
 ## useradd ops_admin
 grep -w 'ops_admin' /etc/passwd
@@ -87,16 +81,6 @@ else
   useradd -u 777 dev_guest
   echo 'eEZjcrl28jjei-ql' |passwd --stdin dev_guest
   echo 'user dev_guest create successfully!'
-fi
-## useradd work 
-grep -w 'work' /etc/passwd
-if [ $? -eq 0 ];then
-  echo 'user work already exists!'
-  echo 'wjaPzu6aNen{zhl9' |passwd --stdin work
-else
-  useradd -u 666 work
-  echo 'wjaPzu6aNen{zhl9' |passwd --stdin work
-  echo 'user work create successfully!'
 fi
 
 ################
@@ -179,6 +163,7 @@ sudo sysctl -p
 ## 计划任务 ##
 ##############
 
+sudo echo  > /var/spool/cron/root
 sudo echo "0 */6 * * * sync && echo 3 >/proc/sys/vm/drop_caches  && echo 0 >/proc/sys/vm/drop_caches && swapoff -a && swapon -a" >> /var/spool/cron/root
 sudo service crond restart && sudo chkconfig crond on
 
