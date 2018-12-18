@@ -1,0 +1,42 @@
+# /bin/bash!
+# ops_install
+
+#WEBSERVRE=Your Web Server
+#这里可以进行自定义,将常用的脚本存放到WEBROOT下即可
+
+WEBSERVRE=http://192.168.1.5
+WEBROOT=/ops-tools/scripts
+
+
+echo '======================================================='
+echo '  a: 系统初始化安装     b: 安装iptables '
+echo '  c: 安装Nginx          d: 安装MySQL'
+echo '  e: 安装Varnish        f: 安装JAVA'
+echo '  '
+echo ''
+echo ''
+echo  "示例: 输入 'a' , 则会自动进行系统的初始化安装动作。"
+echo '======================================================='
+echo  "请输入要执行程序的编号:\r"
+read aNum
+
+case $aNum in
+	a) echo "================================================="
+           echo "服务器开始进行初始化环境,这需要一些时间,请稍后..."
+           echo "================================================="
+           sleep 2s;
+           sh -x $WEBSERVER/$WEBROOT/init_install.sh
+	;;
+
+        b) echo "================================================="
+           echo "正在安装iptables防火墙,这需要一些时间,请稍后..."
+           echo "================================================="
+           sleep 2s;
+           # install iptables
+           sh -x $WEBSERVER/$WEBROOT/iptables_install.sh
+           echo 'iptables已经安装完成,马上将进行防火墙设置'
+           # config iptables
+           sh -x $WEBSERVER/$WEBROOT/iptables_config.sh
+        ;;
+
+esac
