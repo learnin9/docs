@@ -33,7 +33,7 @@ case $aNum in
            echo "================================================="
            sleep 2s;
            # install iptables
-           sh -x $WEBSERVER/$WEBROOT/iptables_install.sh
+           sh -x $WEBSERVER/$WEBROOT/install_iptables.sh
            echo 'iptables已经安装完成,马上将进行防火墙设置'
            # config iptables
            sh -x $WEBSERVER/$WEBROOT/iptables_config.sh
