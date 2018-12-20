@@ -59,6 +59,17 @@ clean https://mirrors.tuna.tsinghua.edu.cn/ubuntu
 
 注意：当apt-mirror 被意外中断时，只需要重新运行即可，apt-mirror支持断点续存；另外，意外关闭，需要在/app/project/mirrors/ubuntu/var目录下面删除 apt-mirror.lock文件`rm apt-mirror.lock`，之后执行`apt-mirror`重新启动
 
+
+* 配置自动同步
+
+使用crond任务可以实现自动同步,脚本的执行目录一定要根据自己的情况做修改啊!!!
+
+```
+echo "0  */6  *  *  *  apt-mirror > /dev/null 2>&1; sh /app/project/mirrors/ubuntu/var/clean.sh" >> /var/spool/cron/root
+```
+这样就可以每六个小时自动同步一次，并且可以自动通过`clean.sh`脚本更新镜像;
+
+
 ### 配置NGINX
 
 由于以前已经安装了NGINX，所以此次就不需要再安装了，只需要创建一条软连接即可
