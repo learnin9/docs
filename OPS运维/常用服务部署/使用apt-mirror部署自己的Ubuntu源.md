@@ -65,7 +65,7 @@ clean https://mirrors.tuna.tsinghua.edu.cn/ubuntu
 使用crond任务可以实现自动同步,脚本的执行目录一定要根据自己的情况做修改啊!!!
 
 ```
-echo "0  */6  *  *  *  apt-mirror > /dev/null 2>&1; sh /app/project/mirrors/ubuntu/var/clean.sh" >> /var/spool/cron/root
+echo "0  */6  *  *  *  cd /app/project/mirrors/ubuntu/var/ ; rm -rf apt-mirror.lock ; apt-mirror > /dev/null 2>&1; sh /app/project/mirrors/ubuntu/var/clean.sh" >> /var/spool/cron/root
 ```
 这样就可以每六个小时自动同步一次，并且可以自动通过`clean.sh`脚本更新镜像;
 
