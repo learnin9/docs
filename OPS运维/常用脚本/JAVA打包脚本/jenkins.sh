@@ -11,3 +11,5 @@ FROM_DIR=/mapbar/app/soft/jenkins/workspace/$PROJECT_NAME/target/$PACKAGE_NAME  
 set +x
 ## 使用脚本进行打包
 sh  /app/jenkins/scripts/build_jar.sh -n ${PROJECT_NAME} -r ${PROJECT_ROOT} -p ${PACKAGE_NAME} -f ${FROM_DIR}
+
+
